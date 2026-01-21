@@ -11,7 +11,7 @@ import json
 load_dotenv()
 
 app = FastAPI(title="Wealth Trends Backend")
-
+handler = app  # Vercel serverless needs this
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -78,5 +78,7 @@ def reddit_trends(query: str = Query(...), api_key: str = Depends(verify_api_key
         return {"platform": "reddit", "raw": raw, "analysis": analysis}
     except Exception as e:
         raise HTTPException(500, str(e))
-
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
 # Add more endpoints later (YouTube, X, etc.)
